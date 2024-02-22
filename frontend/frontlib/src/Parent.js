@@ -4,7 +4,6 @@ import AddBook from './AddBook';
 
 const ParentComponent = () => {
   const handleAddBook = (newBook) => {
-    // Logic to add the new book
     console.log('New book added:', newBook);
   };
 

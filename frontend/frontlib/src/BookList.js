@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './BookList.css';
-// import './styles.css';
 import SortButton from './SortButton';
 import Pagination from './Pagination';
-import AddBook from './AddBook';
 
 const BookList = () => {
   const [books, setBooks] = useState([]);
@@ -36,23 +34,21 @@ const BookList = () => {
   };
 
   const handleSearch = () => {
-    // Search functionality handled in useEffect
+    // Implement search functionality if needed
   };
 
   const handleSort = () => {
-    const sortedBooks = [...filteredBooks].sort((a, b) => {
-      if (sortOrder === 'asc') {
-        return a.published_year - b.published_year;
-      } else {
-        return b.published_year - a.published_year;
-      }
-    });
-    setFilteredBooks(sortedBooks);
-    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    // Implement sorting functionality if needed
   };
 
-  const handleAddBook = book => {
-    setBooks([...books, book]);
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5000/api/books/${id}`);
+      // Remove the deleted book from the books state array
+      setBooks(books.filter(book => book.id !== id));
+    } catch (error) {
+      console.error('Error deleting book:', error);
+    }
   };
 
   const handlePageChange = pageNumber => {
@@ -96,6 +92,7 @@ const BookList = () => {
                 <span>&darr;</span>
               )}
             </th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -105,6 +102,9 @@ const BookList = () => {
               <td>{book.author}</td>
               <td>{book.isbn}</td>
               <td>{book.published_year}</td>
+              <td>
+                <button onClick={() => handleDelete(book.id)}>Delete</button>
+              </td>
             </tr>
           ))}
         </tbody>
