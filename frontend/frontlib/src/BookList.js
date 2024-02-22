@@ -1,18 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './BookList.css'; // Import CSS file
+import { Link } from 'react-router-dom';
+import './BookList.css';
+// import './styles.css';
 import SortButton from './SortButton';
-import Pagination from './Pagination'; // Import the Pagination component
+import Pagination from './Pagination';
+import AddBook from './AddBook';
 
 const BookList = () => {
   const [books, setBooks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [booksPerPage] = useState(7); // Change to display more books per page
+  const [booksPerPage] = useState(7);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filteredBooks, setFilteredBooks] = useState([]);
+  const [sortOrder, setSortOrder] = useState('asc');
 
   useEffect(() => {
     fetchBooks();
   }, [currentPage]);
+
+  useEffect(() => {
+    const filtered = books.filter(book =>
+      book.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredBooks(filtered);
+  }, [searchTerm, books]);
 
   const fetchBooks = async () => {
     try {
@@ -24,27 +36,32 @@ const BookList = () => {
   };
 
   const handleSearch = () => {
-    // Handle search functionality here
-    alert('Search button clicked with term: ' + searchTerm);
+    // Search functionality handled in useEffect
   };
 
   const handleSort = () => {
-    // Handle sort functionality here
-    alert('Sort button clicked!');
+    const sortedBooks = [...filteredBooks].sort((a, b) => {
+      if (sortOrder === 'asc') {
+        return a.published_year - b.published_year;
+      } else {
+        return b.published_year - a.published_year;
+      }
+    });
+    setFilteredBooks(sortedBooks);
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
   };
 
-  const handleAdd = () => {
-    // Handle add functionality here
-    alert('Add button clicked!');
+  const handleAddBook = book => {
+    setBooks([...books, book]);
   };
 
-  const handlePageChange = (pageNumber) => {
+  const handlePageChange = pageNumber => {
     setCurrentPage(pageNumber);
   };
 
   const indexOfLastBook = currentPage * booksPerPage;
   const indexOfFirstBook = indexOfLastBook - booksPerPage;
-  const currentBooks = books.slice(indexOfFirstBook, indexOfLastBook);
+  const currentBooks = filteredBooks.slice(indexOfFirstBook, indexOfLastBook);
 
   return (
     <div className="book-list-container">
@@ -54,13 +71,15 @@ const BookList = () => {
           <input
             type="text"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={e => setSearchTerm(e.target.value)}
             className="search-input"
             placeholder="Search..."
           />
-          <button onClick={handleSearch} className="search-button">Search</button>
+          <button onClick={handleSearch} className="search-button">
+            Search
+          </button>
           <SortButton onClick={handleSort} />
-          <button onClick={handleAdd} className="add-button">Add</button> {/* Add button */}
+          <Link to="/add" className="add-button">Add</Link>
         </div>
       </div>
       <table className="book-table">
@@ -69,7 +88,14 @@ const BookList = () => {
             <th>Title</th>
             <th>Author</th>
             <th>ISBN</th>
-            <th>Published Year</th>
+            <th>
+              Published Year{' '}
+              {sortOrder === 'asc' ? (
+                <span>&uarr;</span>
+              ) : (
+                <span>&darr;</span>
+              )}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -85,7 +111,7 @@ const BookList = () => {
       </table>
       <Pagination
         currentPage={currentPage}
-        totalPages={Math.ceil(books.length / booksPerPage)}
+        totalPages={Math.ceil(filteredBooks.length / booksPerPage)}
         onPageChange={handlePageChange}
       />
     </div>
