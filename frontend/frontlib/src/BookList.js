@@ -38,7 +38,15 @@ const BookList = () => {
   };
 
   const handleSort = () => {
-    // Implement sorting functionality if needed
+    const sortedBooks = [...filteredBooks].sort((a, b) => {
+      if (sortOrder === 'asc') {
+        return a.published_year - b.published_year;
+      } else {
+        return b.published_year - a.published_year;
+      }
+    });
+    setFilteredBooks(sortedBooks);
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
   };
 
   const handleDelete = async (id) => {
