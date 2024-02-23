@@ -26,16 +26,14 @@ const BookList = () => {
 
   const fetchBooks = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/books');
+      const response = await axios.get('https://lib-backend-jre2.onrender.com/api/books');
       setBooks(response.data);
     } catch (error) {
       console.error('Error fetching books:', error);
     }
   };
 
-  const handleSearch = () => {
-    // Implement search functionality if needed
-  };
+  const handleSearch = () => {  };
 
   const handleSort = () => {
     const sortedBooks = [...filteredBooks].sort((a, b) => {
@@ -51,7 +49,7 @@ const BookList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/books/${id}`);
+      await axios.delete(`https://lib-backend-jre2.onrender.com/api/books/${id}`);
       // Remove the deleted book from the books state array
       setBooks(books.filter(book => book.id !== id));
     } catch (error) {

@@ -126,10 +126,8 @@ body {
 .book-table td:last-child {
     white-space: nowrap;
     padding-right: 0.1px;
-    /* Prevent wrapping of content */
 }
 
 .book-table td:last-child button {
     margin-left: 1px;
-    /* Adjust the margin between buttons */
 }

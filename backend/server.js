@@ -47,19 +47,14 @@ app.post('/api/books', async (req, res) => {
   }
 });
 
-// Route to delete a book by its ID
 app.delete('/api/books/:id', async (req, res) => {
   const bookId = req.params.id;
   console.log(bookId);
   try {
-    // Delete the book from the database based on its ID
     const result = await client.query('DELETE FROM books WHERE id = $1 RETURNING *', [bookId]);
     if (result.rowCount === 0) {
-      // console.log("no book");
-      // If no book was deleted (ID not found), return a 404 status
       res.status(404).json({ message: 'Book not found' });
     } else {
-      // If the book was successfully deleted, return the deleted book data
       res.json({ message: 'Book deleted successfully', deletedBook: result.rows[0] });
     }
   } catch (error) {
