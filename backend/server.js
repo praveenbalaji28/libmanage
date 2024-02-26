@@ -4,10 +4,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { Client } = require('pg');
 const cors = require('cors');
-require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port =  5000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -22,7 +21,6 @@ const client = new Client({
 });
 client.connect();
 
-// Routes
 app.get('/api/books', async (req, res) => {
   try {
     const result = await client.query('SELECT * FROM books');

@@ -21,12 +21,13 @@ const BookList = () => {
     const filtered = books.filter(book =>
       book.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
+    fetchBooks();
     setFilteredBooks(filtered);
   }, [searchTerm, books]);
 
   const fetchBooks = async () => {
     try {
-      const response = await axios.get('https://lib-backend-jre2.onrender.com/api/books');
+      const response = await axios.get('http://localhost:5000/api/books');
       setBooks(response.data);
     } catch (error) {
       console.error('Error fetching books:', error);
@@ -49,11 +50,11 @@ const BookList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`https://lib-backend-jre2.onrender.com/api/books/${id}`);
+      await axios.delete(`http://localhost:5000/api/books/${id}`);
       // Remove the deleted book from the books state array
       setBooks(books.filter(book => book.id !== id));
     } catch (error) {
-      console.error('Error deleting book:', error);
+      console.error('Error deleting book:', error);             
     }
   };
 
